@@ -13,17 +13,13 @@ app.use(express.json());
 // Inicializar la base de datos
 const initDatabase = async () => {
   try {
-    // Crear extensión UUID
+    // Crear extensión UUID si no existe
     await pool.query(QUERIES.CREATE_UUID_EXTENSION);
-    console.log('Extensión UUID creada o verificada');
+    console.log('Extensión UUID verificada');
     
-    // Eliminar tabla si existe
-    await pool.query(QUERIES.DROP_DEVICES_TABLE);
-    console.log('Tabla anterior eliminada si existía');
-    
-    // Crear tabla de dispositivos
+    // Crear tabla de dispositivos si no existe
     await pool.query(QUERIES.CREATE_DEVICES_TABLE);
-    console.log('Nueva tabla de dispositivos creada');
+    console.log('Tabla de dispositivos verificada');
   } catch (error) {
     console.error('Error al inicializar la base de datos:', error);
   }

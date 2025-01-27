@@ -6,9 +6,12 @@ import { Device } from '../types/device';
 export class DeviceController {
   async getAllDevices(req: Request, res: Response) {
     try {
+      console.log('Obteniendo todos los dispositivos');
       const result = await pool.query(QUERIES.GET_ALL_DEVICES);
+      console.log('Dispositivos encontrados:', result.rows);
       res.json(result.rows);
     } catch (error) {
+      console.error('Error al obtener dispositivos:', error);
       res.status(500).json({ error: 'Error al obtener los dispositivos' });
     }
   }
@@ -29,10 +32,14 @@ export class DeviceController {
   async createDevice(req: Request, res: Response) {
     try {
       const { name, type, ip, status, variable } = req.body as Omit<Device, 'id'>;
+      console.log('Creando dispositivo:', { name, type, ip, status, variable });
+      
       const result = await pool.query(QUERIES.CREATE_DEVICE, [name, type, ip, status, variable]);
+      console.log('Dispositivo creado:', result.rows[0]);
+      
       res.status(201).json(result.rows[0]);
     } catch (error) {
-      console.error('Error al crear dispositivo:', error);
+      console.error('Error detallado al crear dispositivo:', error);
       res.status(500).json({ error: 'Error al crear el dispositivo' });
     }
   }
@@ -61,6 +68,32 @@ export class DeviceController {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ error: 'Error al eliminar el dispositivo' });
+    }
+  }
+
+  async testDatabase(req: Request, res: Response) {
+    try {
+      // Probar conexión
+      await pool.query('SELECT NOW()');
+      
+      // Verificar tabla
+      const tables = await pool.query(`
+        SELECT table_name 
+        FROM information_schema.tables 
+        WHERE table_schema = 'public'
+      `);
+      
+      // Contar dispositivos
+      const devices = await pool.query('SELECT COUNT(*) FROM devices');
+      
+      res.json({
+        status: 'ok',
+        tables: tables.rows,
+        deviceCount: devices.rows[0].count
+      });
+    } catch (error) {
+      console.error('Error en prueba de base de datos:', error);
+      res.status(500).json({ error: 'Error en prueba de base de datos' });
     }
   }
 } 

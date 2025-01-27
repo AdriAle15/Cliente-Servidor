@@ -22,8 +22,8 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({ device, onEdit, onDelete
         if (mounted) {
           setIsConnected(true);
           
-          websocketService.setOnMessageCallback((data) => {
-            if (mounted && data.type === 'ledState' && data.variable === device.variable) {
+          websocketService.setCallback(device.variable, (data) => {
+            if (mounted && data.type === 'ledState') {
               setLedState(data.state === 'on');
             }
           });
@@ -40,7 +40,7 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({ device, onEdit, onDelete
 
     return () => {
       mounted = false;
-      websocketService.disconnect();
+      websocketService.removeCallback(device.variable);
     };
   }, [device.ip, device.variable]);
 

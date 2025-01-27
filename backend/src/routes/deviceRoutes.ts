@@ -9,5 +9,6 @@ router.get('/:id', deviceController.getDeviceById);
 router.post('/', deviceController.createDevice);
 router.put('/:id', deviceController.updateDevice);
 router.delete('/:id', deviceController.deleteDevice);
+router.get('/test-db', deviceController.testDatabase);
 
 export const deviceRoutes = router; 
