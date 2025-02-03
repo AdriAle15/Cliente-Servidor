@@ -25,8 +25,8 @@ void app_main(void);
 static const char *TAG = "LED_SERVER";
 
 // Configuración WiFi
-const char* WIFI_SSID = "Yolymell";
-const char* WIFI_PASS = "0802785477";
+const char* WIFI_SSID = "SSD";
+const char* WIFI_PASS = "password";
 
 // Definir pines para los LEDs
 #define LED_PIN_1 GPIO_NUM_12
